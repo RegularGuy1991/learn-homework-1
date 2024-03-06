@@ -12,46 +12,41 @@
   бота отвечать, в каком созвездии сегодня находится планета.
 
 """
-import logging
 
+import logging, ephem
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO,
-                    filename='bot.log')
-
-
-PROXY = {
-    'proxy_url': 'socks5://t1.learn.python.ru:1080',
-    'urllib3_proxy_kwargs': {
-        'username': 'learn',
-        'password': 'python'
-    }
-}
-
+logging.basicConfig(filename="bot.log", level=logging.INFO)
 
 def greet_user(update, context):
-    text = 'Вызван /start'
-    print(text)
-    update.message.reply_text(text)
+    print("Вызван /start")
+    update.message.reply_text("Здравствуй")
 
 
-def talk_to_me(update, context):
-    user_text = update.message.text
-    print(user_text)
-    update.message.reply_text(text)
+# def find_const(update, context):
+#    text = update.message.text.split(" ")
+#    planet_name = 'Arcturus'
+#    planet = ephem.star(planet_name)
+#    const = ephem.constellation(planet)
+#    print(const)
+#    print(text[1])
 
+def find_const(update, context):
+    planet_name = update.message.text.split()[1]
+    mars = ephem.Mars('2024/02/19')
+    const = ephem.constellation(mars)
+    if planet_name == 'Mars':
+        update.message.reply_text(const)
 
 def main():
-    mybot = Updater("КЛЮЧ, КОТОРЫЙ НАМ ВЫДАЛ BotFather", request_kwargs=PROXY, use_context=True)
+    mybot = Updater("6849800937:AAHXrA00ZD0rY-0ZUMmTFDyRkXckQGBLWaI", use_context=True)
 
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
-    dp.add_handler(MessageHandler(Filters.text, talk_to_me))
+    dp.add_handler(CommandHandler("planet", find_const))
 
+    logging.info("Бот стартовал")
     mybot.start_polling()
-    mybot.idle()
-
 
 if __name__ == "__main__":
     main()

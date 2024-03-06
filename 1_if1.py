@@ -14,6 +14,21 @@
 
 """
 
+age = input("Введите ваш возраст: ")
+
+def define_activity(age):
+    if int(age) <= 4:
+      return 'Детский сад'
+    if int(age) <= 18:
+      return 'Школа'
+    if int(age) <= 23:
+      return 'ВУЗ'
+    else: "работать"
+
+activity = define_activity(age)
+
+print(activity)
+
 def main():
     """
     Эта функция вызывается автоматически при запуске скрипта в консоли
